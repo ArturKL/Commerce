@@ -22,6 +22,13 @@ class Listing(models.Model):
     active = models.BooleanField(default=True)
     subscribers = models.ManyToManyField(User, related_name='subscriptions', blank=True)
 
+    def get_highest_bid(self):
+        if self.bids.all():
+            highest_bid = self.bids.order_by('-value').first()
+            return highest_bid
+        else:
+            return self.starting_bid
+
 
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids')

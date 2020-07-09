@@ -2,6 +2,24 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-
-    TODO
+    {% for listing in listings %}
+        <div class="card flex-row flex-wrap">
+            <div class="card-header border-0">
+                <img src="{{ listing.image_url }}" alt="" height="200px">
+            </div>
+            <div class="card-block px-2">
+                <h4 class="card-title">{{ listing.title}}</h4>
+                <p class="card-text">{{ listing.description }}</p>
+                <p>Price: <strong>{{ listing.get_highest_bid }}$</strong></p>
+            </div>
+            <div class="w-100"></div>
+            <div class="card-footer w-100 text-muted">
+                <a href="#" class="btn btn-primary">More</a>
+                Category: {{ listing.category }}
+            </div>
+        </div>
+        <br>
+    {% empty %}
+        <h3>No active listings</h3>
+    {% endfor %}
 {% endblock %}
