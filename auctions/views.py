@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from .models import *
 from .forms import ListingForm
@@ -66,17 +67,68 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-
+@login_required()
 def new_listing(request):
     if request.method == 'POST':
         form = ListingForm(request.POST)
         if form.is_valid():
-            listing = form.save()
+            form.save()
             return HttpResponseRedirect(reverse('index'))
         else:
             return render(request, 'auctions/newlisting.html', {
                 'form': form
             })
-    return render(request, 'auctions/newlisting.html', {
-        'form': ListingForm
-    })
+    else:
+        return render(request, 'auctions/newlisting.html', {
+            'form': ListingForm
+        })
+
+
+def listing_view(request, listing_id):
+    listing = Listing.objects.filter(id=listing_id).first()
+    if listing:
+        return render(request, 'auctions/listing.html', {
+            'listing': listing
+        })
+    else:
+        return render(request, 'auctions/error.html', {
+            'message': 'Listing not found.'
+        })
+
+
+@login_required
+def bid(request, listing_id):
+    if request.method == 'POST':
+        bid_value = float(request.POST['value'])
+        listing = Listing.objects.filter(id=listing_id).first()
+        if listing:
+            # Check if bid is valid
+            if listing.started() and bid_value > float(listing.get_highest_bid().value) or\
+                    not listing.started() and bid_value >= float(listing.starting_bid):
+                new_bid = Bid(value=bid_value, user=request.user, listing=listing)
+                new_bid.save()
+                return HttpResponseRedirect(reverse('listing', args=[listing_id]))
+        else:
+            return render(request, 'auctions/error.html', {
+                'message': 'Listing not found.'
+            })
+    else:
+        return render(request, 'auctions/listing.html', {
+            'listing': Listing.objects.get(pk=listing_id),
+            'message': "Invalid bid."
+        })
+
+
+def close(request, listing_id):
+    listing = Listing.objects.filter(id=listing_id).first()
+    if listing:
+        if listing.bids.all():
+            winner = listing.get_highest_bid().user
+            listing.winner = winner
+        listing.active = False
+        listing.save()
+        return HttpResponseRedirect(reverse('listing', args=[listing_id]))
+    else:
+        return render(request, 'auctions/error.html', {
+            'message': 'Listing not found.'
+        })

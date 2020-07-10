@@ -10,12 +10,12 @@
             <div class="card-block px-2">
                 <h4 class="card-title">{{ listing.title}}</h4>
                 <p class="card-text">{{ listing.description }}</p>
-                <p>Price: <strong>{{ listing.get_highest_bid }}$</strong></p>
+                <p>Price: <strong>{{ listing.current_price }}$</strong></p>
             </div>
             <div class="w-100"></div>
             <div class="card-footer w-100 text-muted">
-                <a href="#" class="btn btn-primary">More</a>
-                Category: {{ listing.category }}
+                <a href="{% url 'listing' listing.id %}" class="btn btn-primary">More</a>
+                <div class="category">Category: {{ listing.category }}</div>
             </div>
         </div>
         <br>

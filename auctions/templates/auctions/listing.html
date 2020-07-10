@@ -1,0 +1,50 @@
+{% extends 'auctions/layout.html' %}
+
+
+{% block title %}
+    {{ listing.title }}
+{% endblock title %}
+
+
+{% block body %}
+    <p>Listed in category: <a href="#">{{ listing.category }}</a></p>
+    {% if listing.image_url %}
+        <img src="{{ listing.image_url }}" class="listing_img">
+    {% endif %}
+    <h2>{{ listing.title }}</h2>
+    <p>
+        {{ listing.description }}
+    </p>
+    <p>            
+        {% if listing.started %}
+            Current Bid: <strong>{{ listing.get_highest_bid.value }}$</strong>
+        {% else %}
+            Starting bid: <strong>{{ listing.starting_bid }}$</strong>
+        {% endif %}
+        {% if listing.active %}
+            {% if user.is_authenticated and user.id != listing.seller.id %}
+                <form action="{% url 'bid' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="number" name="value" placeholder="Bid" maxlength="14" step="0.01" autocomplete="off" required>
+                    <input type="submit" class="btn btn-primary" value="Place Bid">
+                </form>
+                {% if message %}
+                    {{ message }}
+                {% endif %}
+                <br>
+                <a href="#">Add to Watchlist</a>
+            {% elif user.id == listing.seller.id %}
+                <a href="{% url 'close' listing.id %}" class="btn btn-danger">Close</a>
+            {% endif %}
+            <h4 class="active">Active</h4>
+        {% else %}
+            {% if listing.winner and user.id == listing.winner.id %}
+                <h4 class="active">You won this auction!</h4>
+            {% endif %}   
+            <h4 class="closed">Closed</h4>
+        {% endif %}
+        
+    </p>
+        
+{% endblock body %}
+    

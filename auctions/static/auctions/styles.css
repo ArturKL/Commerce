@@ -1,3 +1,31 @@
 body {
     padding: 10px;
 }
+
+.listing_img {
+    max-height: 400px;
+    float: left;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 5px;
+    background-color: #F7F7F7;
+    margin-right: 5px;
+}
+
+input[name='value'] {
+    height: 36px;
+    vertical-align: middle;
+}
+
+.category {
+    display: inline;
+    vertical-align: middle;
+}
+
+.active{
+    color: #28a745;
+}
+
+.closed {
+    color: #dc3545;
+}
