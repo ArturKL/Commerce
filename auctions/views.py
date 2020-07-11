@@ -132,3 +132,27 @@ def close(request, listing_id):
         return render(request, 'auctions/error.html', {
             'message': 'Listing not found.'
         })
+
+@login_required
+def watch(request, listing_id):
+    listing = Listing.objects.filter(id=listing_id).first()
+    if listing:
+        user = request.user
+        if listing.subscribers.filter(id=user.id).first():
+            listing.subscribers.remove(user)
+        else:
+            listing.subscribers.add(user)
+        return HttpResponseRedirect(reverse('listing', args=[listing_id]))
+    else:
+        return render(request, 'auctions/error.html', {
+            'message': 'Listing not found.'
+        })
+
+
+@login_required
+def watchlist(request):
+    user = request.user
+    listings = user.subs.all()
+    return render(request, 'auctions/watchlist.html', {
+        'listings': listings
+    })

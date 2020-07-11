@@ -22,7 +22,7 @@ class Listing(models.Model):
     active = models.BooleanField(default=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
     winner = models.ForeignKey(User, default=None, on_delete=models.SET_DEFAULT, null=True, related_name='wins')
-    subscribers = models.ManyToManyField(User, related_name='subscriptions', blank=True)
+    subscribers = models.ManyToManyField(User, related_name='subs', blank=True)
 
     def __str__(self):
         return f'{self.title}'

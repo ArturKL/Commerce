@@ -32,7 +32,12 @@
                     {{ message }}
                 {% endif %}
                 <br>
-                <a href="#">Add to Watchlist</a>
+                
+                {% if request.user in listing.subscribers.all %}
+                    <a href="{% url 'watch' listing.id %}">Remove from Watchlist</a>
+                {% else %}
+                    <a href="{% url 'watch' listing.id %}">Add to Watchlist</a>
+                {% endif %}
             {% elif user.id == listing.seller.id %}
                 <a href="{% url 'close' listing.id %}" class="btn btn-danger">Close</a>
             {% endif %}
