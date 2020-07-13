@@ -24,8 +24,32 @@ input[name='value'] {
 
 .active{
     color: #28a745;
+    font-weight: normal;
 }
 
 .closed {
     color: #dc3545;
+    font-weight: normal;
+}
+
+.comment-form {
+    margin-top: 20px;
+    clear: both;
+}
+
+.comments .media{
+    margin-top: 20px;
+    border-bottom: 1px dotted #ccc;
+}
+
+.media {
+    margin-left: 70px;
+}
+
+textarea {
+    height: 180px;
+}
+
+label {
+    margin-top: 50px;
 }

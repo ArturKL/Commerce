@@ -57,5 +57,8 @@ class Bid(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='comments')
-    content = models.CharField(max_length=1000)
+    content = models.TextField(max_length=1000)
+    posted = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f'{self.content} said {self.user} about {self.listing}'

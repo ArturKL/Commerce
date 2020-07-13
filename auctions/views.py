@@ -87,8 +87,10 @@ def new_listing(request):
 def listing_view(request, listing_id):
     listing = Listing.objects.filter(id=listing_id).first()
     if listing:
+        comments = listing.comments.all()
         return render(request, 'auctions/listing.html', {
-            'listing': listing
+            'listing': listing,
+            'comments': comments
         })
     else:
         return render(request, 'auctions/error.html', {
@@ -156,3 +158,21 @@ def watchlist(request):
     return render(request, 'auctions/watchlist.html', {
         'listings': listings
     })
+
+
+@login_required
+def comment(request, listing_id):
+    listing = Listing.objects.filter(id=listing_id).first()
+    if listing:
+        if request.method == 'POST':
+            content = request.POST['content']
+            user = request.user
+            new_comment = Comment(listing=listing,
+                                  user=user,
+                                  content=content)
+            new_comment.save()
+        return HttpResponseRedirect(reverse('listing', args=[listing_id]))
+    else:
+        return render(request, 'auctions/error.html', {
+            'message': 'Listing not found.'
+        })

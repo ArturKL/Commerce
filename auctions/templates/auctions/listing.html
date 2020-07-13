@@ -1,4 +1,5 @@
 {% extends 'auctions/layout.html' %}
+{% load humanize %}
 
 
 {% block title %}
@@ -48,8 +49,27 @@
             {% endif %}   
             <h4 class="closed">Closed</h4>
         {% endif %}
-        
     </p>
+    <form action="{% url 'comment' listing.id %}" method="POST" class='comment-form'>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="content">Add Commet</label>
+            <textarea name='content' class='form-control' maxlength="1000" rows="4"></textarea>
+        </div>
+        <input type="submit" class="btn btn-primary">
+    </form>
+    <div class="comments">
+        <h2>Comments</h2>
+        {% for comment in comments %}
+            <div class="media">
+                
+                <div class="media-body">
+                <h5 class="mt-0">{{ comment.user }}</h5>
+                {{ comment.content }}
+                <p class="pull-right"><small>{{ comment.posted|naturaltime }}</small></p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
         
 {% endblock body %}
-    
