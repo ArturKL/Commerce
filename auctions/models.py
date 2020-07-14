@@ -18,10 +18,11 @@ class Listing(models.Model):
     description = models.TextField(max_length=1000)
     starting_bid = models.DecimalField(max_digits=14, decimal_places=2)
     image_url = models.CharField(max_length=300, blank=True)
-    category = models.ForeignKey(ListingCategory, default=39, on_delete=models.SET_DEFAULT, related_name='category')
+    category = models.ForeignKey(ListingCategory, default=39, on_delete=models.SET_DEFAULT, related_name='listings')
     active = models.BooleanField(default=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
-    winner = models.ForeignKey(User, default=None, on_delete=models.SET_DEFAULT, null=True, related_name='wins')
+    winner = models.ForeignKey(User, default=None, on_delete=models.SET_DEFAULT, null=True,
+                               blank=True, related_name='wins')
     subscribers = models.ManyToManyField(User, related_name='subs', blank=True)
 
     def __str__(self):
@@ -61,4 +62,4 @@ class Comment(models.Model):
     posted = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.content} said {self.user} about {self.listing}'
+        return f'\"{self.content}\" said {self.user} about {self.listing}'

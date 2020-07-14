@@ -44,6 +44,12 @@
             {% endif %}
             <h4 class="active">Active</h4>
         {% else %}
+            <br><br>
+            {% if request.user in listing.subscribers.all %}
+                <a href="{% url 'watch' listing.id %}">Remove from Watchlist</a>
+            {% else %}
+                <a href="{% url 'watch' listing.id %}">Add to Watchlist</a>
+            {% endif %}
             {% if listing.winner and user.id == listing.winner.id %}
                 <h4 class="active">You won this auction!</h4>
             {% endif %}   

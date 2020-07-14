@@ -176,3 +176,20 @@ def comment(request, listing_id):
         return render(request, 'auctions/error.html', {
             'message': 'Listing not found.'
         })
+
+
+def categories(request):
+    category_list = ListingCategory.objects.all()
+    return render(request, 'auctions/categories.html', {
+        'categories': category_list
+    })
+
+
+def category_view(request, category_id):
+    category = ListingCategory.objects.filter(pk=category_id).first()
+    if category:
+        listings = category.listings.filter(active=True).all()
+        return render(request, 'auctions/category.html', {
+            'category': category,
+            'listings': listings
+        })
