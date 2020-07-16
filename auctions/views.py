@@ -67,11 +67,15 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 @login_required()
 def new_listing(request):
     if request.method == 'POST':
         form = ListingForm(request.POST)
         if form.is_valid():
+            form = form.save(commit=False)
+            user = request.user
+            form.seller = user
             form.save()
             return HttpResponseRedirect(reverse('index'))
         else:
@@ -110,6 +114,11 @@ def bid(request, listing_id):
                 new_bid = Bid(value=bid_value, user=request.user, listing=listing)
                 new_bid.save()
                 return HttpResponseRedirect(reverse('listing', args=[listing_id]))
+            else:
+                return render(request, 'auctions/listing.html', {
+                    'listing': Listing.objects.get(pk=listing_id),
+                    'message': "Invalid bid."
+                })
         else:
             return render(request, 'auctions/error.html', {
                 'message': 'Listing not found.'

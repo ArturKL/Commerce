@@ -8,7 +8,7 @@
 
 
 {% block body %}
-    <p>Listed in category: <a href="#">{{ listing.category }}</a></p>
+    <p>Listed in category: <a href="{% url 'category' listing.category.id %}">{{ listing.category }}</a></p>
     {% if listing.image_url %}
         <img src="{{ listing.image_url }}" class="listing_img">
     {% endif %}

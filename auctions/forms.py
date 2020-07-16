@@ -6,6 +6,7 @@ class ListingForm(forms.ModelForm):
     class Meta:
         model = Listing
         fields = ['title', 'description', 'starting_bid', 'image_url', 'category']
+        widgets = {'seller': forms.HiddenInput()}
 
     def __init__(self, *args, **kwargs):
         super(ListingForm, self).__init__(*args, **kwargs)
