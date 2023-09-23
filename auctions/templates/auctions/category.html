@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Active Listings in {{ category }}</h2>
     {% for listing in listings %}
         <div class="card flex-row flex-wrap">
             <div class="card-header border-0">
